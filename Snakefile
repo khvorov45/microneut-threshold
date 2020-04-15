@@ -1,6 +1,7 @@
 rule all:
     input:
-        "data-plot/sim-hist-log.pdf"
+        "data-plot/sim-hist-log.pdf",
+        "data/suellen.csv"
 
 rule sim:
     input:
@@ -9,6 +10,15 @@ rule sim:
         "data/sim.csv"
     shell:
         "Rscript data/sim.R"
+
+rule suellen_clean:
+    input:
+        "data-raw/suellen.xlsx",
+        "data/suellen.R"
+    output:
+        "data/suellen.csv"
+    shell:
+        "Rscript data/suellen.R"
 
 rule sim_plot:
     input:
