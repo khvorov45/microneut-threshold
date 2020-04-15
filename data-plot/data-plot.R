@@ -23,7 +23,8 @@ read_suellen <- function() {
   )
 }
 
-plot_histograms <- function(data, xname = "logtitre", yname = "inf") {
+plot_histograms <- function(data, xname = "logtitre",
+                            yname = "inf", inf_lab = "Infected") {
   data %>%
     ggplot(aes(!!rlang::sym(xname), col = as.factor(!!rlang::sym(yname)))) +
     ggdark::dark_theme_bw(verbose = FALSE) +
@@ -32,7 +33,7 @@ plot_histograms <- function(data, xname = "logtitre", yname = "inf") {
       legend.box.spacing = unit(0, "null"),
       axis.text.x = element_text(angle = 90)
     ) +
-    scale_color_discrete("Infected", labels = c("1" = "Yes", "0" = "No")) +
+    scale_color_discrete(inf_lab, labels = c("1" = "Yes", "0" = "No")) +
     scale_x_continuous(
       "Titre",
       breaks = log(10 * 2^(0:8)), labels = 10 * 2^(0:8)
@@ -57,7 +58,10 @@ sim_data <- read_sim()
 suellen_data <- read_suellen()
 
 sim_hist_cont <- plot_histograms(sim_data)
-suellen_hist_log <- plot_histograms(suellen_data, yname = "covid")
+suellen_hist_log <- plot_histograms(
+  suellen_data,
+  yname = "covid", inf_lab = "Covid"
+)
 
 save_plot(sim_hist_cont, "sim-hist-cont")
 save_plot(suellen_hist_log, "suellen-hist")
