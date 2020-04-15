@@ -34,6 +34,19 @@ rule data_plot:
     shell:
         "Rscript data-plot/data-plot.R"
 
+# Model fitting ===============================================================
+
+rule fit:
+    input:
+        "model-fit/model-fit.R",
+        "data/sim.csv",
+        "data/suellen.csv"
+    output:
+        "model-fit/fit-sim.csv",
+        "model-fit/fit-suellen.csv"
+    shell:
+        "Rscript model-fit/model-fit.R"
+
 # Report ======================================================================
 
 rule report:

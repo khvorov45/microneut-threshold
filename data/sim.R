@@ -35,7 +35,7 @@ censor_titres <- function(data) {
 
 # Script ======================================================================
 
-sim_data <- sim(n = 1e5, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1) %>%
+sim_data <- sim(n = 5e3, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1) %>%
   censor_titres()
 
 write_csv(sim_data, file.path(data_dir, "sim.csv"))

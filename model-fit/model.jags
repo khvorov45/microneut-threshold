@@ -4,7 +4,7 @@ model {
     for (i in 1:n) {
         logtitre_point[i] ~ dnorm(mu[i], 1 / sigma^2) T(logtitre_low[i], logtitre_high[i])
 
-        mu[i] ~ beta_0 + beta_1 * status[i]
+        mu[i] <- beta_0 + beta_1 * status[i]
     }
 
     sigma ~ dexp(0.1)
