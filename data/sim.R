@@ -22,8 +22,20 @@ sim <- function(n = 200, inf_prop = 0.5,
   )
 }
 
+censor_titres <- function(data) {
+  data %>%
+    mutate(
+      logtitre_point = if_else(
+        logtitre < log(20) | logtitre > log(2560), NA_real_, logtitre
+      ),
+      logtitre_low = if_else(logtitre < log(20), -1e6, logtitre - 0.01),
+      logtitre_high = if_else(logtitre > log(2560), 1e6, logtitre + 0.01)
+    )
+}
+
 # Script ======================================================================
 
-sim_data <- sim(n = 1e5, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1)
+sim_data <- sim(n = 1e5, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1) %>%
+  censor_titres()
 
 write_csv(sim_data, file.path(data_dir, "sim.csv"))

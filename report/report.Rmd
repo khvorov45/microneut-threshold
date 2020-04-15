@@ -18,7 +18,7 @@ The goal of this analysis is to find a diagnostic threshold titre against COVID-
 
 This is predicated on the idea that infected people have higher titres than non-infected people. An illustration is in Figure \@ref(fig:sim-hist-cont).
 
-(ref:sim-hist-cont) Simulated titre data. Most non-infected people have undetectable titres (the solid line). Most infected people have detectable titres centered around 80 (the dashed line).
+(ref:sim-hist-cont) Simulated titre data. Most non-infected people have undetectable titres (the solid line, simulated from $N(1, 1)$ on the log-scale). Most infected people have detectable titres centered around 80 (the dashed line, simulated from $N(4, 1)$ on the log-scale).
 
 ```{r sim-hist-cont, echo=FALSE, fig.align='center', fig.cap='(ref:sim-hist-cont)'}
 knitr::include_graphics("../data-plot/sim-hist-cont.pdf")

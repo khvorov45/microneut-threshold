@@ -86,6 +86,13 @@
       "Repository": "CRAN",
       "Hash": "543776ae6848fde2f48ff3816d0628bc"
     },
+    "bookdown": {
+      "Package": "bookdown",
+      "Version": "0.18",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "72e9c52caf3f7aacb4e368b75f6ec72a"
+    },
     "broom": {
       "Package": "broom",
       "Version": "0.5.5",
@@ -120,6 +127,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "08cf4045c149a0f0eaf405324c7495bd"
+    },
+    "coda": {
+      "Package": "coda",
+      "Version": "0.19-3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b177892d05d94358d282fcc303799593"
     },
     "colorspace": {
       "Package": "colorspace",
@@ -531,6 +545,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "bb5996d0bd962d214a11140d77589917"
+    },
+    "rjags": {
+      "Package": "rjags",
+      "Version": "4-10",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e7fc80d447730043303ae76ca5773e3d"
     },
     "rlang": {
       "Package": "rlang",
