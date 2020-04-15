@@ -21,12 +21,15 @@ plot_histograms <- function(sim_data) {
     ggplot(aes(logtitre, col = as.factor(inf))) +
     ggdark::dark_theme_bw(verbose = FALSE) +
     theme(
-      legend.position = "bottom"
+      legend.position = "bottom",
+      legend.box.spacing = unit(0, "null")
     ) +
     scale_color_discrete("Infected", labels = c("1" = "Yes", "0" = "No")) +
     scale_x_continuous("Log titre") +
     scale_y_continuous("Count") +
-    geom_freqpoly(binwidth = 0.2)
+    stat_bin(
+      geom = "step", binwidth = 0.1, position = "identity"
+    )
 }
 
 save_plot <- function(plot, name) {
