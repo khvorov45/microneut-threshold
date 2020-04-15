@@ -37,4 +37,4 @@ T \sim N(\mu, \sigma) \\
 
 Where $T$ is the log-titre and $I$ is the infection status indicator (1 --- infected, 0 --- not infected).
 
-The lowest titre dilution was 20, the highest --- 2560.
+The lowest titre dilution was 20, the highest --- 2560. I considered the undetectable ($<\text{log}(20)$) titres to
