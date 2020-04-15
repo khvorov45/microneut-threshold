@@ -1,7 +1,9 @@
 rule all:
     input:
-        "data-plot/sim-hist-log.pdf",
+        "data-plot/sim-hist-cont.pdf",
         "data/suellen.csv"
+
+# Data generation =============================================================
 
 rule sim:
     input:
@@ -20,11 +22,15 @@ rule suellen_clean:
     shell:
         "Rscript data/suellen.R"
 
-rule sim_plot:
+# Data plotting ===============================================================
+
+rule data_plot:
     input:
         "data-plot/data-plot.R",
-        "data/sim.csv"
+        "data/sim.csv",
+        "data/suellen.csv"
     output:
-        "data-plot/sim-hist-log.pdf"
+        "data-plot/sim-hist-cont.pdf",
+        "data-plot/suellen-hist.pdf"
     shell:
         "Rscript data-plot/data-plot.R"

@@ -24,6 +24,6 @@ sim <- function(n = 200, inf_prop = 0.5,
 
 # Script ======================================================================
 
-sim_data <- sim(n = 1e5)
+sim_data <- sim(n = 1e5, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1)
 
 write_csv(sim_data, file.path(data_dir, "sim.csv"))

@@ -16,16 +16,27 @@ read_sim <- function() {
   )
 }
 
-plot_histograms <- function(sim_data) {
-  sim_data %>%
-    ggplot(aes(logtitre, col = as.factor(inf))) +
+read_suellen <- function() {
+  read_csv(
+    file.path(data_dir, "suellen.csv"),
+    col_types = cols(covid = col_integer())
+  )
+}
+
+plot_histograms <- function(data, xname = "logtitre", yname = "inf") {
+  data %>%
+    ggplot(aes(!!rlang::sym(xname), col = as.factor(!!rlang::sym(yname)))) +
     ggdark::dark_theme_bw(verbose = FALSE) +
     theme(
       legend.position = "bottom",
-      legend.box.spacing = unit(0, "null")
+      legend.box.spacing = unit(0, "null"),
+      axis.text.x = element_text(angle = 90)
     ) +
     scale_color_discrete("Infected", labels = c("1" = "Yes", "0" = "No")) +
-    scale_x_continuous("Log titre") +
+    scale_x_continuous(
+      "Titre",
+      breaks = log(10 * 2^(0:8)), labels = 10 * 2^(0:8)
+    ) +
     scale_y_continuous("Count") +
     stat_bin(
       geom = "step", binwidth = 0.1, position = "identity"
@@ -43,7 +54,10 @@ save_plot <- function(plot, name) {
 # Script ======================================================================
 
 sim_data <- read_sim()
+suellen_data <- read_suellen()
 
-hist_log <- plot_histograms(sim_data)
+sim_hist_cont <- plot_histograms(sim_data)
+suellen_hist_log <- plot_histograms(suellen_data, yname = "covid")
 
-save_plot(hist_log, "sim-hist-log")
+save_plot(sim_hist_cont, "sim-hist-cont")
+save_plot(suellen_hist_log, "suellen-hist")
