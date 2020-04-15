@@ -1,0 +1,125 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+    \setmainfont[]{LiberationSans}
+    \setsansfont[]{LiberationSans}
+    \setmonofont[Mapping=tex-ansi]{LiberationMono}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={Microneut Threshold},
+            pdfauthor={Arseniy Khvorov},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{long table}}{}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{Microneut Threshold}
+\author{Arseniy Khvorov}
+\date{16 April, 2020}
+
+\begin{document}
+\maketitle
+
+\section{Overview}\label{overview}
+
+The goal of this analysis is to find a diagnostic threshold titre
+against COVID-19 of the microneutralisation assay.
+
+This is predicated on the idea that infected people have higher titres
+than non-infected people. An illustration is in Figure
+\ref{fig:sim-hist-cont}.
+
+
+
+
+
+\begin{figure}
+
+{\centering \includegraphics{../data-plot/sim-hist-cont} 
+
+}
+
+\caption{Simulated titre data. Most non-infected people have
+undetectable titres (the solid line). Most infected people have
+detectable titres centered around 80 (the dashed line).}\label{fig:sim-hist-cont}
+\end{figure}
+
+Looking at Figure \ref{fig:sim-hist-cont}, we can draw a vertical line
+at any titre value to act as a threshold. Anyone to the left of the line
+would be considered not infected, anyone to the right --- infected. The
+proportion of the titre distribution for the uninfected (the solid line)
+to the left of the line would be the specificity of the test and the
+proportion of the titre distribution for the infected (the dashed line)
+to the right of the line would be the sensitivity of the test.
+
+\section{Model}\label{model}
+
+I considered a linear model for the log-titres
+
+\begin{gather*}
+T \sim N(\mu, \sigma) \\
+\mu = \beta_0 + \beta_1 I
+\end{gather*}
+
+Where \(T\) is the log-titre and \(I\) is the infection status indicator
+(1 --- infected, 0 --- not infected).
+
+\end{document}

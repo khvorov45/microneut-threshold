@@ -1,0 +1,40 @@
+---
+title: "Microneut Threshold"
+author: "Arseniy Khvorov"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+mainfont: LiberationSans
+sansfont: LiberationSans
+monofont: LiberationMono
+output:
+  bookdown::pdf_document2:
+    keep_tex: yes
+    toc: no
+    latex_engine: xelatex
+---
+
+# Overview
+
+The goal of this analysis is to find a diagnostic threshold titre against COVID-19 of the microneutralisation assay.
+
+This is predicated on the idea that infected people have higher titres than non-infected people. An illustration is in Figure \@ref(fig:sim-hist-cont).
+
+(ref:sim-hist-cont) Simulated titre data. Most non-infected people have undetectable titres (the solid line). Most infected people have detectable titres centered around 80 (the dashed line).
+
+```{r sim-hist-cont, echo=FALSE, fig.align='center', fig.cap='(ref:sim-hist-cont)'}
+knitr::include_graphics("../data-plot/sim-hist-cont.pdf")
+```
+
+Looking at Figure \@ref(fig:sim-hist-cont), we can draw a vertical line at any titre value to act as a threshold. Anyone to the left of the line would be considered not infected, anyone to the right --- infected. The proportion of the titre distribution for the uninfected (the solid line) to the left of the line would be the specificity of the test and the proportion of the titre distribution for the infected (the dashed line) to the right of the line would be the sensitivity of the test.
+
+# Model
+
+I considered a linear model for the log-titres
+
+\begin{gather*}
+T \sim N(\mu, \sigma) \\
+\mu = \beta_0 + \beta_1 I
+\end{gather*}
+
+Where $T$ is the log-titre and $I$ is the infection status indicator (1 --- infected, 0 --- not infected).
+
+The lowest titre dilution was 20, the highest --- 2560.

@@ -1,7 +1,6 @@
 rule all:
     input:
-        "data-plot/sim-hist-cont.pdf",
-        "data/suellen.csv"
+        "report/report.pdf"
 
 # Data generation =============================================================
 
@@ -34,3 +33,15 @@ rule data_plot:
         "data-plot/suellen-hist.pdf"
     shell:
         "Rscript data-plot/data-plot.R"
+
+# Report ======================================================================
+
+rule report:
+    input:
+        "data-plot/sim-hist-cont.pdf",
+        "data-plot/suellen-hist.pdf",
+        "report/report.Rmd"
+    output:
+        "report/report.pdf"
+    shell:
+        """Rscript -e 'rmarkdown::render("report/report.Rmd")'"""

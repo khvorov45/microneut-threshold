@@ -26,7 +26,12 @@ read_suellen <- function() {
 plot_histograms <- function(data, xname = "logtitre",
                             yname = "inf", inf_lab = "Infected") {
   data %>%
-    ggplot(aes(!!rlang::sym(xname), col = as.factor(!!rlang::sym(yname)))) +
+    ggplot(
+      aes(!!rlang::sym(xname),
+        col = as.factor(!!rlang::sym(yname)),
+        linetype = as.factor(!!rlang::sym(yname))
+      )
+    ) +
     ggdark::dark_theme_bw(verbose = FALSE) +
     theme(
       legend.position = "bottom",
@@ -34,6 +39,7 @@ plot_histograms <- function(data, xname = "logtitre",
       axis.text.x = element_text(angle = 90)
     ) +
     scale_color_discrete(inf_lab, labels = c("1" = "Yes", "0" = "No")) +
+    scale_linetype_discrete(inf_lab, labels = c("1" = "Yes", "0" = "No")) +
     scale_x_continuous(
       "Titre",
       breaks = log(10 * 2^(0:8)), labels = 10 * 2^(0:8)
