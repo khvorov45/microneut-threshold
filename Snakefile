@@ -42,8 +42,8 @@ rule fit:
         "data/sim.csv",
         "data/suellen.csv"
     output:
-        "model-fit/fit-sim.csv",
-        "model-fit/fit-suellen.csv"
+        "model-fit/sim-lin.csv",
+        "model-fit/suellen-lin.csv"
     shell:
         "Rscript model-fit/model-fit.R"
 

@@ -27,7 +27,7 @@ suellen_data <- read_excel(file.path(data_raw_dir, "suellen.xlsx")) %>%
   rename(id = Sample, titre = `Final titer`, covid = `COVID-19 status`) %>%
   filter(str_detect(id, "VIDRL-")) %>%
   mutate(
-    covid = if_else(covid == "Pos", 1L, 0L),
+    inf = if_else(covid == "Pos", 1L, 0L),
     logtitre = log(titre),
   ) %>%
   censor_titres()

@@ -9,17 +9,10 @@ data_plot_dir <- here("data-plot")
 
 # Functions ===================================================================
 
-read_sim <- function() {
+read_data <- function(name) {
   read_csv(
-    file.path(data_dir, "sim.csv"),
+    file.path(data_dir, glue::glue("{name}.csv")),
     col_types = cols(inf = col_integer())
-  )
-}
-
-read_suellen <- function() {
-  read_csv(
-    file.path(data_dir, "suellen.csv"),
-    col_types = cols(covid = col_integer())
   )
 }
 
@@ -60,14 +53,11 @@ save_plot <- function(plot, name) {
 
 # Script ======================================================================
 
-sim_data <- read_sim()
-suellen_data <- read_suellen()
+sim_data <- read_data("sim")
+suellen_data <- read_data("suellen")
 
 sim_hist_cont <- plot_histograms(sim_data)
-suellen_hist_log <- plot_histograms(
-  suellen_data,
-  yname = "covid", inf_lab = "Covid"
-)
+suellen_hist_log <- plot_histograms(suellen_data, inf_lab = "Covid")
 
 save_plot(sim_hist_cont, "sim-hist-cont")
 save_plot(suellen_hist_log, "suellen-hist")
