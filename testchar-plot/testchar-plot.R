@@ -24,13 +24,17 @@ plot_testchar <- function(fit_res) {
       strip.background = element_blank(),
       strip.placement = "outside",
       axis.title.y = element_blank(),
-      panel.grid.minor = element_blank()
+      panel.grid.minor = element_blank(),
+      panel.spacing = unit(0, "null")
     ) +
     facet_wrap(~char, ncol = 1, scales = "free_y", strip.position = "left") +
     scale_x_continuous(
       "Threshold titre",
       breaks = log(c(seq(20, 45, 5), seq(50, 80, 10))),
       labels = c(seq(20, 45, 5), seq(50, 80, 10))
+    ) +
+    scale_y_continuous(
+      labels = scales::percent_format(1), breaks = seq(0, 1, 0.1)
     ) +
     geom_ribbon(aes(ymin = low, ymax = high), alpha = 0.5) +
     geom_line()
