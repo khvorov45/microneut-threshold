@@ -47,12 +47,27 @@ rule fit:
     shell:
         "Rscript model-fit/model-fit.R"
 
+# Result plots ================================================================
+
+rule testchar_plot:
+    input:
+        "model-fit/sim-lin.csv",
+        "model-fit/suellen-lin.csv",
+        "testchar-plot/testchar-plot.R"
+    output:
+        "testchar-plot/sim-testchar.pdf",
+        "testchar-plot/suellen-testchar.pdf"
+    shell:
+        "Rscript testchar-plot/testchar-plot.R"
+
 # Report ======================================================================
 
 rule report:
     input:
         "data-plot/sim-hist-cont.pdf",
         "data-plot/suellen-hist.pdf",
+        "testchar-plot/sim-testchar.pdf",
+        "testchar-plot/suellen-testchar.pdf",
         "report/report.Rmd"
     output:
         "report/report.pdf"

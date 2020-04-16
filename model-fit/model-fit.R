@@ -7,8 +7,8 @@ library(furrr)
 plan(multiprocess)
 
 # Directories used
-data_dir <- "data"
-model_fit_dir <- "model-fit"
+data_dir <- here("data")
+model_fit_dir <- here("model-fit")
 
 # Functions ===================================================================
 
@@ -76,7 +76,7 @@ data <- map(c("sim" = "sim", "suellen" = "suellen"), read_data)
 fit_lin <- map(data, fit_linear)
 
 preds <- map(fit_lin, ~ predict_thresholds(
-  1e3, seq(log(20), log(40), length.out = 101), .x
+  4e3, seq(log(20), log(80), length.out = 25), .x
 ))
 
 summs <- map(preds, summ_preds)
