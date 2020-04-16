@@ -50,7 +50,7 @@ Estimates of sensitivity $\hat{e}$ and specificity $\hat{p}$ at any threshold $t
 \hat{p} = \Phi(\frac{t - \hat{\beta}_0}{r})
 \end{gather*}
 
-Where $\Phi$ is the standard normal CDF.
+Where $\Phi$ is the standard normal CDF. The bounds for the above estimates can be obtained by finding the bounds of the linear predictor $\hat{\beta}_0 + \hat{\beta}_1 I$ and applying the above transformations on them.
 
 # Results
 
