@@ -36,3 +36,27 @@ T \sim N(\mu, \sigma) \\
 \end{gather*}
 
 Where $T$ is the log-titre and $I$ is the infection status indicator (1 --- infected, 0 --- not infected).
+
+Undetectable titres (below 20) were given a value of 10. I treated this value as if it were an actual measurement of 10.
+
+# Model fitting
+
+I fit the linear model using least squares. The procedure to obtain an estimate of the sensitivity and specificity of different thresholds was as follows
+
+1. Obtain the estimated log-titre mean $m$ and standard error $s$ of that mean from the fit for both the infected and the uninfected groups. Obtain estimated residual error $r$.
+
+2. For each group, generate a random number $m_t$ from $N(m, s^2)$. This is one possible true mean of the titre distribution for the group. Hence the distribution $N(m_t, r^2)$ is one possible true titre distribution for the group.
+
+3. For the uninfected group, calculate $P(X < t)$ where $t$ is the threshold log-titre and $X \sim N(m_t, r^2)$. This is the specificity. For the infected group, calculate $P(X > t)$. This is the sensitivity.
+
+4. Repeat steps 2-3 many times (I did 4,000) for different titre thresholds (I chose 25 equally spaces thresholds between 20 and 80). This will yield samples for sensitivity and specificity for each titre threshold. Quantiles of these samples can act as bounds for interval estimates of sensitivity and specificity.
+
+# Results
+
+Interval estimates for sensitivity and specificity of threshold-based tests are presented in Figure \@ref(fig:testchar).
+
+(ref:testchar) Estimated sensitivity (top panel) and specificity (bottom panel) of a threshold titre test. Bounds of the shaded region are the 95% confidence interval. The solid line is the median estimate.
+
+```{r testchar, echo=FALSE, fig.align='center', fig.cap='(ref:testchar)'}
+knitr::include_graphics("../testchar-plot/suellen-testchar.pdf")
+```
