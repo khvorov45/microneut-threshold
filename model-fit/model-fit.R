@@ -27,18 +27,32 @@ fit_linear <- function(data) {
     pred_data,
     fit_val = preds$fit,
     fit_se = preds$se.fit,
+    fit_low = fit_val - qnorm(0.975) * fit_se,
+    fit_high = fit_val + qnorm(0.975) * fit_se,
     res_sd = sd(fit$residuals)
   )
 }
 
 predthresh_linear <- function(threshold, fit_lin) {
+  calc_testchar <- function(threshold, inf, dist_mean, res_sd) {
+    ifelse(
+      inf,
+      pnorm(threshold, dist_mean, res_sd, lower.tail = FALSE),
+      pnorm(threshold, dist_mean, res_sd, lower.tail = TRUE)
+    )
+  }
   fit_lin %>%
     mutate(
-      dist_mean = rnorm(n(), fit_val, fit_se),
-      test_char = ifelse(
+      test_char = calc_testchar(threshold, inf, fit_val, res_sd),
+      test_char_low = ifelse(
         inf,
-        pnorm(threshold, dist_mean, res_sd, lower.tail = FALSE),
-        pnorm(threshold, dist_mean, res_sd, lower.tail = TRUE)
+        calc_testchar(threshold, inf, fit_low, res_sd),
+        calc_testchar(threshold, inf, fit_high, res_sd)
+      ),
+      test_char_high = ifelse(
+        inf,
+        calc_testchar(threshold, inf, fit_high, res_sd),
+        calc_testchar(threshold, inf, fit_low, res_sd)
       ),
       char = ifelse(inf, "Sensitivity", "Specificity"),
       threshold = local(threshold)
@@ -47,22 +61,6 @@ predthresh_linear <- function(threshold, fit_lin) {
 
 predthresh_linear_many <- function(thresholds, fit_lin) {
   map_dfr(thresholds, predthresh_linear, fit_lin)
-}
-
-predict_thresholds <- function(n_samples, thresholds, fit_lin) {
-  future_map_dfr(
-    1:n_samples, ~ predthresh_linear_many(thresholds, fit_lin) %>%
-      mutate(ind = .x)
-  )
-}
-
-summ_preds <- function(preds) {
-  preds %>%
-    group_by(char, threshold) %>%
-    summarise(test_char = list(quantile(test_char, c(0.025, 0.5, 0.975)))) %>%
-    ungroup() %>%
-    unnest_wider(test_char) %>%
-    rename(low = `2.5%`, med = `50%`, high = `97.5%`)
 }
 
 save_summ <- function(data, name) {
@@ -75,10 +73,8 @@ data <- map(c("sim" = "sim", "suellen" = "suellen"), read_data)
 
 fit_lin <- map(data, fit_linear)
 
-preds <- map(fit_lin, ~ predict_thresholds(
-  4e3, seq(log(20), log(80), length.out = 25), .x
+preds <- map(fit_lin, ~ predthresh_linear_many(
+  seq(log(20), log(80), length.out = 25), .x
 ))
 
-summs <- map(preds, summ_preds)
-
-iwalk(summs, save_summ)
+iwalk(preds, save_summ)

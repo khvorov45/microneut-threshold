@@ -18,7 +18,7 @@ read_fit <- function(name) {
 
 plot_testchar <- function(fit_res) {
   fit_res %>%
-    ggplot(aes(threshold, med)) +
+    ggplot(aes(threshold, test_char)) +
     ggdark::dark_theme_bw(verbose = FALSE) +
     theme(
       strip.background = element_blank(),
@@ -36,7 +36,7 @@ plot_testchar <- function(fit_res) {
     scale_y_continuous(
       labels = scales::percent_format(1), breaks = seq(0, 1, 0.1)
     ) +
-    geom_ribbon(aes(ymin = low, ymax = high), alpha = 0.5) +
+    geom_ribbon(aes(ymin = test_char_low, ymax = test_char_high), alpha = 0.5) +
     geom_line()
 }
 
