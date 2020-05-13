@@ -66,16 +66,31 @@ rule resample:
     shell:
         "Rscript resample/resample.R"
 
+rule resample_summ:
+    input:
+        "resample/summ.R",
+        "resample/resample-sim.csv",
+        "resample/resample-suellen.csv"
+    output:
+        "resample/summ-sim.csv",
+        "resample/summ-suellen.csv"
+    shell:
+        "Rscript resample/summ.R"
+
 # Result plots ================================================================
 
 rule testchar_plot:
     input:
         "model-fit/sim-lin.csv",
         "model-fit/suellen-lin.csv",
+        "resample/summ-sim.csv",
+        "resample/summ-suellen.csv",
         "testchar-plot/testchar-plot.R"
     output:
         "testchar-plot/sim-testchar.pdf",
-        "testchar-plot/suellen-testchar.pdf"
+        "testchar-plot/suellen-testchar.pdf",
+        "testchar-plot/sim-resample-testchar.pdf",
+        "testchar-plot/suellen-resample-testchar.pdf"
     shell:
         "Rscript testchar-plot/testchar-plot.R"
 

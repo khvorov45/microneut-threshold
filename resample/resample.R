@@ -29,15 +29,15 @@ test_micro_only <- function(data, index, logthreshold) {
 calc_sens_spec <- function(results) {
   results %>%
     mutate(
-      inf = if_else(inf == 1L, "sens", "spec"),
-      prop_pos = if_else(inf == 1L, prop_pos, 1 - prop_pos)
+      prop_pos = if_else(inf == 1L, prop_pos, 1 - prop_pos),
+      inf = if_else(inf == 1L, "Sensitivity", "Specificity"),
     ) %>%
     rename(test_char = prop_pos, char = inf)
 }
 
 resample_and_test <- function(data, n_resamples, micro_thresholds) {
   boots <- bootstraps(data)$splits
-  res <- map_dfr(
+  res <- future_map_dfr(
     micro_thresholds,
     function(threshold) {
       imap_dfr(boots, ~ test_micro_only(analysis(.x), .y, threshold))
@@ -56,6 +56,8 @@ save_resample <- function(data, name) {
 
 data <- map(c("sim" = "sim", "suellen" = "suellen"), read_data)
 
-res <- map(data, resample_and_test, 100, seq(log(20), log(80), length.out = 25))
+res <- map(
+  data, resample_and_test, 250, seq(log(20), log(80), length.out = 100)
+)
 
 iwalk(res, save_resample)

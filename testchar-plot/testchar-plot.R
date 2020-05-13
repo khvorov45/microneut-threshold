@@ -1,11 +1,11 @@
 # Plots of resulting threshold test characteristics
 
 library(tidyverse)
-library(here)
 
 # Directories used
-model_fit_dir <- here("model-fit")
-testchar_plot_dir <- here("testchar-plot")
+model_fit_dir <- here::here("model-fit")
+testchar_plot_dir <- here::here("testchar-plot")
+resample_dir <- here::here("resample")
 
 # Functions ===================================================================
 
@@ -16,9 +16,16 @@ read_fit <- function(name) {
   )
 }
 
+read_resample <- function(name) {
+  read_csv(
+    file.path(resample_dir, glue::glue("summ-{name}.csv")),
+    col_types = cols()
+  )
+}
+
 plot_testchar <- function(fit_res) {
   fit_res %>%
-    ggplot(aes(threshold, test_char)) +
+    ggplot(aes(logthreshold, test_char)) +
     ggdark::dark_theme_bw(verbose = FALSE) +
     theme(
       strip.background = element_blank(),
@@ -52,7 +59,9 @@ save_plot <- function(pl, name) {
 
 dat <- list(
   "sim" = read_fit("sim-lin"),
-  "suellen" = read_fit("suellen-lin")
+  "suellen" = read_fit("suellen-lin"),
+  "sim-resample" = read_resample("sim"),
+  "suellen-resample" = read_resample("suellen")
 )
 
 pls <- map(dat, plot_testchar)

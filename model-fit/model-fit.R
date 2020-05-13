@@ -28,34 +28,34 @@ fit_linear <- function(data) {
   )
 }
 
-predthresh_linear <- function(threshold, fit_lin) {
-  calc_testchar <- function(threshold, inf, dist_mean, res_sd) {
+predthresh_linear <- function(logthreshold, fit_lin) {
+  calc_testchar <- function(logthreshold, inf, dist_mean, res_sd) {
     ifelse(
       inf,
-      pnorm(threshold, dist_mean, res_sd, lower.tail = FALSE),
-      pnorm(threshold, dist_mean, res_sd, lower.tail = TRUE)
+      pnorm(logthreshold, dist_mean, res_sd, lower.tail = FALSE),
+      pnorm(logthreshold, dist_mean, res_sd, lower.tail = TRUE)
     )
   }
   fit_lin %>%
     mutate(
-      test_char = calc_testchar(threshold, inf, fit_val, res_sd),
+      test_char = calc_testchar(logthreshold, inf, fit_val, res_sd),
       test_char_low = ifelse(
         inf,
-        calc_testchar(threshold, inf, fit_low, res_sd),
-        calc_testchar(threshold, inf, fit_high, res_sd)
+        calc_testchar(logthreshold, inf, fit_low, res_sd),
+        calc_testchar(logthreshold, inf, fit_high, res_sd)
       ),
       test_char_high = ifelse(
         inf,
-        calc_testchar(threshold, inf, fit_high, res_sd),
-        calc_testchar(threshold, inf, fit_low, res_sd)
+        calc_testchar(logthreshold, inf, fit_high, res_sd),
+        calc_testchar(logthreshold, inf, fit_low, res_sd)
       ),
       char = ifelse(inf, "Sensitivity", "Specificity"),
-      threshold = local(threshold)
+      logthreshold = local(logthreshold)
     )
 }
 
-predthresh_linear_many <- function(thresholds, fit_lin) {
-  map_dfr(thresholds, predthresh_linear, fit_lin)
+predthresh_linear_many <- function(logthresholds, fit_lin) {
+  map_dfr(logthresholds, predthresh_linear, fit_lin)
 }
 
 save_summ <- function(data, name) {
