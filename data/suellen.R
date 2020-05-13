@@ -13,11 +13,10 @@ data_dir <- here("data")
 censor_titres <- function(data) {
   data %>%
     mutate(
-      logtitre_point = if_else(
-        logtitre < log(20) | logtitre > log(2560), NA_real_, logtitre
-      ),
+      # Nobody went above 2560, no unbounded upper bound problem
+      logtitre_point = if_else(logtitre < log(20), NA_real_, logtitre),
       logtitre_low = if_else(logtitre < log(20), -1e6, logtitre - 0.01),
-      logtitre_high = if_else(logtitre > log(2560), 1e6, logtitre + 0.01)
+      logtitre_high = logtitre + 0.01
     )
 }
 
