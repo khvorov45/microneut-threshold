@@ -31,6 +31,11 @@ sim <- function(n = 200, inf_prop = 0.5,
 
 # Script ======================================================================
 
-sim_data <- sim(n = 1e4, mu0 = 1, sd = 1, beta_inf = 3)
+sim_data <- sim(
+  n = 1e4,
+  mu0 = c(1, 1),
+  sd = matrix(c(1, 0.5, 0.5, 1), ncol = 2),
+  beta_inf = c(3, 3)
+)
 
 write_csv(sim_data, file.path(data_dir, "sim.csv"))
