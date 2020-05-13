@@ -32,7 +32,9 @@ rule data_plot:
         "data/suellen.csv"
     output:
         "data-plot/sim-hist-cont.pdf",
-        "data-plot/suellen-hist.pdf"
+        "data-plot/suellen-hist.pdf",
+        "data-plot/suellen-hist-iga.pdf",
+        "data-plot/suellen-hist-igg.pdf"
     shell:
         "Rscript data-plot/data-plot.R"
 
