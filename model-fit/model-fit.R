@@ -14,10 +14,10 @@ model_fit_dir <- here("model-fit")
 
 source(file.path(data_dir, "read_data.R"))
 
-fit_linear <- function(data) {
-  fit <- lm(logtitre ~ inf, data)
+fit_linear <- function(data, outname = "logtitre1") {
+  fit <- lm(as.formula(glue::glue("{outname} ~ inf")), data)
   pred_data <- tibble(inf = c(0L, 1L))
-  preds <- predict(fit, tibble(inf = c(0L, 1L)), se.fit = TRUE)
+  preds <- predict(fit, pred_data, se.fit = TRUE)
   mutate(
     pred_data,
     fit_val = preds$fit,
@@ -64,11 +64,15 @@ save_summ <- function(data, name) {
 
 # Script ======================================================================
 
-data <- map(c("sim" = "sim", "suellen" = "suellen"), read_data)
+sim_data <- read_data("sim")
+suellen_data <- read_data("suellen")
 
-fit_lin <- map(data, fit_linear)
+fits <- list(
+  sim = fit_linear(sim_data),
+  suellen = fit_linear(suellen_data, "logtitre")
+)
 
-preds <- map(fit_lin, ~ predthresh_linear_many(
+preds <- map(fits, ~ predthresh_linear_many(
   seq(log(20), log(80), length.out = 25), .x
 ))
 

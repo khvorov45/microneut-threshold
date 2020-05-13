@@ -5,37 +5,32 @@
 # status determination
 
 library(tidyverse)
-library(extraDistr)
-library(here)
 
 # Directories used
-data_dir <- here("data")
+data_dir <- here::here("data")
 
 # Functions ===================================================================
 
 sim <- function(n = 200, inf_prop = 0.5,
-                mu0 = 0, sd0 = 2,
-                mu1 = 3, sd1 = 2) {
-  tibble(
-    inf = as.integer(rbern(n, inf_prop)),
-    logtitre = rnorm(n, ifelse(inf, mu1, mu0), ifelse(inf, sd1, sd0))
-  )
-}
-
-censor_titres <- function(data) {
-  data %>%
-    mutate(
-      logtitre_point = if_else(
-        logtitre < log(20) | logtitre > log(2560), NA_real_, logtitre
-      ),
-      logtitre_low = if_else(logtitre < log(20), -1e6, logtitre - 0.01),
-      logtitre_high = if_else(logtitre > log(2560), 1e6, logtitre + 0.01)
-    )
+                mu0 = 0, sd = 2, beta_inf = 3) {
+  if (length(mu0) > 1L) {
+    logtitres_inf <- mvtnorm::rmvnorm(n * inf_prop, mu0 + beta_inf, sd)
+    logtitres_uninf <- mvtnorm::rmvnorm(n * (1 - inf_prop), mu0, sd)
+  } else {
+    logtitres_inf <- rnorm(n * inf_prop, mu0 + beta_inf, sd) %>%
+      as.matrix(ncol = 1)
+    logtitres_uninf <- rnorm(n * (1 - inf_prop), mu0, sd) %>%
+      as.matrix(ncol = 1)
+  }
+  colnames(logtitres_inf) <- paste0("logtitre", 1:ncol(logtitres_inf))
+  colnames(logtitres_uninf) <- paste0("logtitre", 1:ncol(logtitres_uninf))
+  logtitres_inf <- as_tibble(logtitres_inf) %>% mutate(inf = 1L)
+  logtitres_uninf <- as_tibble(logtitres_uninf) %>% mutate(inf = 0L)
+  bind_rows(logtitres_inf, logtitres_uninf)
 }
 
 # Script ======================================================================
 
-sim_data <- sim(n = 1e4, mu0 = 1, mu1 = 4, sd0 = 1, sd1 = 1) %>%
-  censor_titres()
+sim_data <- sim(n = 1e4, mu0 = 1, sd = 1, beta_inf = 3)
 
 write_csv(sim_data, file.path(data_dir, "sim.csv"))

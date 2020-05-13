@@ -198,13 +198,6 @@
       "Repository": "CRAN",
       "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
     },
-    "extraDistr": {
-      "Package": "extraDistr",
-      "Version": "1.8.11",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "d69b4b86ad2a91d88f32da991a6e4b38"
-    },
     "fansi": {
       "Package": "fansi",
       "Version": "0.4.1",
@@ -433,6 +426,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "6dfe8bf774944bd5595785e3229d8771"
+    },
+    "mvtnorm": {
+      "Package": "mvtnorm",
+      "Version": "1.1-0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b4467e29ec60b2d05e361c9141e4fc59"
     },
     "nlme": {
       "Package": "nlme",

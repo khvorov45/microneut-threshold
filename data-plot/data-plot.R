@@ -11,7 +11,7 @@ data_plot_dir <- here("data-plot")
 
 source(file.path(data_dir, "read_data.R"))
 
-plot_histograms <- function(data, xname = "logtitre",
+plot_histograms <- function(data, xname = "logtitre1",
                             xlab = "Titre",
                             xbreaks = log(10 * 2^(0:8)),
                             xlabs = 10 * 2^(0:8),
@@ -54,7 +54,10 @@ suellen_data <- read_data("suellen")
 
 plots <- list(
   "sim-hist-cont" = plot_histograms(sim_data),
-  "suellen-hist" = plot_histograms(suellen_data, inf_lab = "Covid"),
+  "suellen-hist" = plot_histograms(
+    suellen_data,
+    inf_lab = "Covid", xname = "logtitre"
+  ),
   "suellen-hist-igg" = plot_histograms(
     suellen_data,
     inf_lab = "Covid", xname = "igg", xlab = "IgG index", xbreaks = waiver(),
