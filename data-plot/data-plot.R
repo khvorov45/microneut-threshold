@@ -51,8 +51,9 @@ save_plot <- function(plot, name) {
 sim_data <- read_data("sim")
 suellen_data <- read_data("suellen")
 
-sim_hist_cont <- plot_histograms(sim_data)
-suellen_hist_log <- plot_histograms(suellen_data, inf_lab = "Covid")
+plots <- list(
+  "sim-hist-cont" = plot_histograms(sim_data),
+  "suellen-hist" = plot_histograms(suellen_data, inf_lab = "Covid")
+)
 
-save_plot(sim_hist_cont, "sim-hist-cont")
-save_plot(suellen_hist_log, "suellen-hist")
+iwalk(plots, save_plot)
