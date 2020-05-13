@@ -27,6 +27,7 @@ rule suellen_clean:
 rule data_plot:
     input:
         "data-plot/data-plot.R",
+        "data/read_data.R",
         "data/sim.csv",
         "data/suellen.csv"
     output:
@@ -40,6 +41,7 @@ rule data_plot:
 rule fit:
     input:
         "model-fit/model-fit.R",
+        "data/read_data.R",
         "data/sim.csv",
         "data/suellen.csv"
     output:

@@ -12,12 +12,7 @@ model_fit_dir <- here("model-fit")
 
 # Functions ===================================================================
 
-read_data <- function(name) {
-  read_csv(
-    file.path(data_dir, glue::glue("{name}.csv")),
-    col_types = cols(inf = col_integer())
-  )
-}
+source(file.path(data_dir, "read_data.R"))
 
 fit_linear <- function(data) {
   fit <- lm(logtitre ~ inf, data)

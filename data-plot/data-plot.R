@@ -9,12 +9,7 @@ data_plot_dir <- here("data-plot")
 
 # Functions ===================================================================
 
-read_data <- function(name) {
-  read_csv(
-    file.path(data_dir, glue::glue("{name}.csv")),
-    col_types = cols(inf = col_integer())
-  )
-}
+source(file.path(data_dir, "read_data.R"))
 
 plot_histograms <- function(data, xname = "logtitre",
                             yname = "inf", inf_lab = "Infected") {
