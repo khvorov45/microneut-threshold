@@ -595,6 +595,13 @@
       "Repository": "CRAN",
       "Hash": "f6a407ae5dd21f6f80a6708bbb6eb3ae"
     },
+    "rsample": {
+      "Package": "rsample",
+      "Version": "0.0.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b98117693cf327f50dc07fcbc85e2de6"
+    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.11",

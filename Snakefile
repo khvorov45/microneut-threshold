@@ -52,6 +52,20 @@ rule fit:
     shell:
         "Rscript model-fit/model-fit.R"
 
+# Resampling ==================================================================
+
+rule resample:
+    input:
+        "resample/resample.R",
+        "data/read_data.R",
+        "data/sim.csv",
+        "data/suellen.csv"
+    output:
+        "resample/resample-sim.csv",
+        "resample/resample-suellen.csv"
+    shell:
+        "Rscript resample/resample.R"
+
 # Result plots ================================================================
 
 rule testchar_plot:
