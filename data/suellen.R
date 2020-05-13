@@ -31,4 +31,21 @@ suellen_data <- read_excel(file.path(data_raw_dir, "suellen.xlsx")) %>%
   ) %>%
   censor_titres()
 
-write_csv(suellen_data, file.path(data_dir, "suellen.csv"))
+eia_data <- read_excel(
+  file.path(data_raw_dir, "eia.xlsx"),
+  skip = 7,
+  col_names = c(
+    # index (igg/iga) = od / co
+    "od_igg", "co_igg", "igg", "interpret_igg", "well",
+    "od_iga", "co_iga", "iga", "interpret_iga",
+    "id", "titre"
+  )
+) %>%
+  select(id, igg, iga) %>%
+  mutate(
+    id = paste0("VIDRL-310320-", str_pad(id, 2, pad = "0"))
+  )
+
+all_data <- full_join(suellen_data, eia_data, by = "id")
+
+write_csv(all_data, file.path(data_dir, "suellen.csv"))

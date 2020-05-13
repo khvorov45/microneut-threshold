@@ -15,6 +15,7 @@ rule sim:
 rule suellen_clean:
     input:
         "data-raw/suellen.xlsx",
+        "data-raw/eia.xlsx",
         "data/suellen.R"
     output:
         "data/suellen.csv"
