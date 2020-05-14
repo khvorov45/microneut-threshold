@@ -26,7 +26,7 @@ summ <- function(result) {
 
 summ2 <- function(result) {
   result %>%
-    mutate(diff = test_char1 - test_char2) %>%
+    mutate(diff = test_char2 - test_char1) %>%
     group_by(char, logthreshold_titre, threshold_elisa) %>%
     summarise(
       test_char1_low = quantile(test_char1, 0.025),
