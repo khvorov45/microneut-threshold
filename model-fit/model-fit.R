@@ -24,7 +24,7 @@ fit_linear <- function(data, outname = "logtitre1") {
     fit_se = preds$se.fit,
     fit_low = fit_val - qnorm(0.975) * fit_se,
     fit_high = fit_val + qnorm(0.975) * fit_se,
-    res_sd = sd(fit$residuals)
+    res_sd = sqrt(mean(fit$residuals^2))
   )
 }
 
