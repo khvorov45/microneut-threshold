@@ -142,7 +142,7 @@ res2 <- list(
   "suellen-igg" = resample_and_test_2(
     suellen_data, 25,
     seq(log(20), log(80), length.out = 10),
-    seq(0, 2.5, length.out = 5),
+    seq(0.5, 2.5, length.out = 5),
     "logtitre", "igg"
   )
 )

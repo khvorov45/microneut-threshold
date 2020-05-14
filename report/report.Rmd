@@ -18,7 +18,7 @@ The goal of this analysis is to find a diagnostic threshold titre against COVID-
 
 This is predicated on the idea that infected people have higher titres than non-infected people. An illustration is in Figure \@ref(fig:sim-hist-cont).
 
-(ref:sim-hist-cont) Simulated titre data. Most non-infected people have undetectable titres (the solid line, simulated from $N(1, 1)$ on the log-scale). Most infected people have detectable titres centered around 80 (the dashed line, simulated from $N(4, 1)$ on the log-scale).
+(ref:sim-hist-cont) Simulated titre data. Most non-infected people have undetectable titres (the solid line, simulated from $N(2, 1)$ on the log-scale). Most infected people have detectable titres centered around 80 (the dashed line, simulated from $N(4.5, 1)$ on the log-scale).
 
 ```{r sim-hist-cont, echo=FALSE, fig.align='center', fig.cap='(ref:sim-hist-cont)'}
 knitr::include_graphics("../data-plot/sim-hist-cont.pdf")
@@ -61,6 +61,54 @@ Interval estimates for sensitivity and specificity of threshold-based tests are 
 ```{r testchar, echo=FALSE, fig.align='center', fig.cap='(ref:testchar)'}
 knitr::include_graphics("../testchar-plot/suellen-testchar.pdf")
 ```
+
+# Alternative approach
+
+The results above are only valid if the assumption that log-titres are normally distributed holds. This assumption may not be justified here as there is a large number of observations recorded as 10 which correspond to undetectable titres. Treating these observations as actual values of 10 results in a skewed distribution that does not look like a normal distribution. Trying to account for the censoring by defining a model for the underlying unobserved true titres would still require some assumption of how the unobserved titres are distributed. Due to the limited ability to measure titres, none of the distributional assumptions can be verified.
+
+To avoid making distributional assumptions, we can resample the observed data. For each resample, we can simulate a testing process (e.g. classify everyone with a titre below 40 as uninfected) and compare the obtained results to the true infection status to calculate the sensitivity and specificity of the test. This will yield a number of values for both the sensitivity and the specificity for each possible threshold without assuming how the titres are distributed. The results are in Figure \@ref(fig:resample-testchar).
+
+(ref:resample-testchar) Estimated sensitivity (top panel) and specificity (bottom panel) of a threshold titre test. Calculated by resampling the observed data and simulating the testing process for each resample. Bounds of the shaded region are the 95% confidence interval. The solid line is the median estimate.
+
+```{r resample-testchar, echo=FALSE, fig.align='center', fig.cap='(ref:resample-testchar)'}
+knitr::include_graphics("../testchar-plot/suellen-resample-testchar.pdf")
+```
+
+# Sequential testing
+
+Using a different titre measurement to help classify people as infected/uninfected may improve the overall test characteristics.
+
+An illustration of a possible distribution for two titres is in Figure \@ref(fig:sim-scatter).
+
+
+(ref:sim-scatter) Simulated data with two titres for the infected and the uninfected group.
+
+```{r sim-scatter, echo=FALSE, fig.align='center', fig.cap='(ref:sim-scatter)'}
+knitr::include_graphics("../data-plot/sim-scatter.pdf")
+```
+
+Figure \@ref(fig:sim-scatter), if a threshold of 20 for titre 1 is used, a number of people will be false negatives (red dots left of 20). But if a threshold of 80 is used for titre 2 (i.e., if above 80 on titre 2 then infected, if below then check titre 1), then a number of these false negatives can be correctly classified as positive. So the sensitivity of the overall test will be improved by the proportion of red dots that are to the left of 20 (would be misclassified if only titre 1 is used) but above 80 (would be correctly classified if titre 2 is used before titre 1).
+
+In our observed data, the distributions of the IgG/IgA measurements do not allow them to improve the microneut measurement. That is, under any reasonable microneut threshold, there isn't a single observation that is miscalculated by microneut alone that wouldn't also be miscalculated if IgG/IgA titres were used (at any threshold). The scatter plots that show this are in Figures \@ref(fig:igg-scatter) and \@ref(fig:iga-scatter).
+
+```{r igg-scatter, echo=FALSE, fig.align='center', fig.cap='IgG vs microneut'}
+knitr::include_graphics("../data-plot/suellen-scatter-igg.pdf")
+```
+
+```{r iga-scatter, echo=FALSE, fig.align='center', fig.cap='IgA vs microneut'}
+knitr::include_graphics("../data-plot/suellen-scatter-iga.pdf")
+```
+
+If I try to resample the data and simulate the testing process at different IgG/IgA thresholds, it ends up not making a huge difference as shown in Figures \@ref(fig:igg-res) and \@ref(fig:iga-res).
+
+```{r igg-res, echo=FALSE, fig.align='center', fig.cap='Using IgG before microneut'}
+knitr::include_graphics("../testchar-plot/suellen-igg-testchar.pdf")
+```
+
+```{r iga-res, echo=FALSE, fig.align='center', fig.cap='Using IgA before microneut'}
+knitr::include_graphics("../testchar-plot/suellen-iga-testchar.pdf")
+```
+
 # Code
 
 Code that generated all of these results is here
