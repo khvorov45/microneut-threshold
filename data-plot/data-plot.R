@@ -12,13 +12,15 @@ data_plot_dir <- here("data-plot")
 source(file.path(data_dir, "read_data.R"))
 
 plot_scatter <- function(data,
-                         xylab = "Titre",
-                         xybreaks = log(10 * 2^(0:8)),
-                         xylabs = 10 * 2^(0:8),
-                         yname = "inf", inf_lab = "Infected") {
+                         xname = "logtitre1", xlabel = "Titre 1",
+                         xbreaks = log(10 * 2^(0:8)), xlabs = 10 * 2^(0:8),
+                         yname = "logtitre2", ylabel = "Titre 2",
+                         ybreaks = log(10 * 2^(0:8)), ylabs = 10 * 2^(0:8),
+                         inf_lab = "Infected", alpha = 0.1) {
   data %>%
+    filter(!is.na(!!rlang::sym(xname)), !is.na(!!rlang::sym(yname))) %>%
     ggplot(aes(
-      logtitre1, logtitre2,
+      !!rlang::sym(xname), !!rlang::sym(yname),
       col = as.factor(inf)
     )) +
     ggdark::dark_theme_bw(verbose = FALSE) +
@@ -29,9 +31,9 @@ plot_scatter <- function(data,
     ) +
     scale_color_discrete(inf_lab, labels = c("1" = "Yes", "0" = "No")) +
     scale_linetype_discrete(inf_lab, labels = c("1" = "Yes", "0" = "No")) +
-    scale_x_continuous(paste(xylab, "1"), breaks = xybreaks, labels = xylabs) +
-    scale_y_continuous(paste(xylab, "2"), breaks = xybreaks, labels = xylabs) +
-    geom_point(alpha = 0.1, shape = 18) +
+    scale_x_continuous(xlabel, breaks = xbreaks, labels = xlabs) +
+    scale_y_continuous(ylabel, breaks = ybreaks, labels = ylabs) +
+    geom_point(alpha = alpha, shape = 18) +
     guides(colour = guide_legend(override.aes = list(alpha = 1)))
 }
 
@@ -92,6 +94,16 @@ plots <- list(
     suellen_data,
     inf_lab = "Covid", xname = "iga", xlab = "IgA index", xbreaks = waiver(),
     xlabs = waiver()
+  ),
+  "suellen-scatter-igg" = plot_scatter(
+    suellen_data,
+    xname = "logtitre", yname = "igg", alpha = 1, ybreaks = waiver(),
+    ylabs = waiver(), ylabel = "IgG index", xlabel = "Titre"
+  ),
+  "suellen-scatter-iga" = plot_scatter(
+    suellen_data,
+    xname = "logtitre", yname = "iga", alpha = 1, ybreaks = waiver(),
+    ylabs = waiver(), ylabel = "IgA index", xlabel = "Titre"
   )
 )
 
