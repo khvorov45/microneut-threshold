@@ -67,9 +67,8 @@ kanta <- read_excel(
   col_names = c("id", "diag", "inf", "titre")
 ) %>%
   mutate(
-    inf = as.integer(str_detect(inf, "PCR Pos")),
-    titre = if_else(str_detect(titre, "/"), NA_character_, titre) %>%
-      as.numeric(),
+    inf = as.integer(str_detect(diag, regex("SARS-CoV-2", ignore_case = TRUE))),
+    titre = as.numeric(titre),
     logtitre = log(titre)
   ) %>%
   select(-diag)

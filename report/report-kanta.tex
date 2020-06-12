@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{url}
+\usepackage[bookmarks,bookmarksnumbered,bookmarksopen,hidelinks]{hyperref}
+\usepackage{multirow}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+\bibliographystyle{vancouver}
+
+\title{Microneut threshold}
+
+\author{Arseniy Khvorov}
+
+\begin{document}
+
+\maketitle
+
+\section{Methods}
+
+For every threshold,
+the sensitivity estimate
+was the proportion of PCR-positive subjects with titres
+over the threshold (or equal to the threshold).
+The specificity estimate
+was the proportion of not PCR-positive subjects
+with titres under the threshold.
+
+In both cases the confidence interval was calculated using the Clopper-Pearson
+method as implemented in the PropCIs package \cite{PropCIs} in R \cite{R}.
+
+This way of doing it avoids having to assume how the titres are distributed.
+
+\section{Results}
+
+The results for the previous dataset provided by Suellen
+(Figure~\ref{fig:suellen}), the new dataset (Figure~\ref{fig:kanta}) and
+the combined dataset (Figure~\ref{fig:combined})
+are in Table~\ref{tab:result-all}.
+
+\input{../simple-test/result-all.tex}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=.8\textwidth]{../data-plot/suellen-hist.pdf}
+    \caption{
+        The old Suellen data.
+    }
+    \label{fig:suellen}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=.8\textwidth]{../data-plot/kanta-hist.pdf}
+    \caption{
+        The new data.
+    }
+    \label{fig:kanta}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=.8\textwidth]{../data-plot/all-real.pdf}
+    \caption{
+        The combined dataset.
+    }
+    \label{fig:combined}
+\end{figure}
+
+\bibliography{references}
+
+All code used is available from
+\url{https://github.com/khvorov45/microneut-threshold}
+
+\end{document}
