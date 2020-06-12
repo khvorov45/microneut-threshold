@@ -40,7 +40,7 @@ censor_titres <- function(data) {
 }
 
 save_csv <- function(data, name) {
-  write_csv(all_data, file.path(data_dir, glue::glue("{name}.csv")))
+  write_csv(data, file.path(data_dir, glue::glue("{name}.csv")))
 }
 
 # Script ======================================================================
@@ -59,3 +59,19 @@ eia_data <- map_dfr(c("Sheet1", "Sheet2"), read_eia_sheet)
 all_data <- full_join(suellen_data, eia_data, by = "id")
 
 save_csv(all_data, "suellen")
+
+kanta <- read_excel(
+  file.path(data_raw_dir, "kanta.xlsx"),
+  sheet = 1,
+  range = "A4:D221",
+  col_names = c("id", "diag", "inf", "titre")
+) %>%
+  mutate(
+    inf = as.integer(str_detect(inf, "PCR Pos")),
+    titre = if_else(str_detect(titre, "/"), NA_character_, titre) %>%
+      as.numeric(),
+    logtitre = log(titre)
+  ) %>%
+  select(-diag)
+
+save_csv(kanta, "kanta")

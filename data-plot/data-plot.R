@@ -77,12 +77,21 @@ save_plot <- function(plot, name) {
 
 sim_data <- read_data("sim")
 suellen_data <- read_data("suellen")
+kanta_data <- read_data("kanta")
 
 plots <- list(
   "sim-hist-cont" = plot_histograms(sim_data),
   "sim-scatter" = plot_scatter(sim_data),
   "suellen-hist" = plot_histograms(
     suellen_data,
+    inf_lab = "Covid", xname = "logtitre"
+  ),
+  "kanta-hist" = plot_histograms(
+    kanta_data,
+    inf_lab = "Covid", xname = "logtitre"
+  ),
+  "all-real" = plot_histograms(
+    bind_rows(kanta_data, select(suellen_data, id, inf, titre, logtitre)),
     inf_lab = "Covid", xname = "logtitre"
   ),
   "suellen-hist-igg" = plot_histograms(
