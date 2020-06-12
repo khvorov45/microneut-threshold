@@ -12,15 +12,15 @@ rule sim:
     shell:
         "Rscript data/sim.R"
 
-rule suellen_clean:
+rule data:
     input:
         "data-raw/suellen.xlsx",
         "data-raw/eia.xlsx",
-        "data/suellen.R"
+        "data/data.R"
     output:
         "data/suellen.csv"
     shell:
-        "Rscript data/suellen.R"
+        "Rscript data/data.R"
 
 # Data plotting ===============================================================
 

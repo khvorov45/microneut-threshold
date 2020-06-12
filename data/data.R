@@ -1,12 +1,13 @@
-# Extract Suellen data
+cat("Extract real data")
 
-library(tidyverse)
-library(readxl)
-library(here)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(readxl)
+})
 
 # Directories used
-data_raw_dir <- here("data-raw")
-data_dir <- here("data")
+data_raw_dir <- here::here("data-raw")
+data_dir <- here::here("data")
 
 # Functions ===================================================================
 
@@ -38,6 +39,10 @@ censor_titres <- function(data) {
     )
 }
 
+save_csv <- function(data, name) {
+  write_csv(all_data, file.path(data_dir, glue::glue("{name}.csv")))
+}
+
 # Script ======================================================================
 
 suellen_data <- read_excel(file.path(data_raw_dir, "suellen.xlsx")) %>%
@@ -53,4 +58,4 @@ eia_data <- map_dfr(c("Sheet1", "Sheet2"), read_eia_sheet)
 
 all_data <- full_join(suellen_data, eia_data, by = "id")
 
-write_csv(all_data, file.path(data_dir, "suellen.csv"))
+save_csv(all_data, "suellen")
