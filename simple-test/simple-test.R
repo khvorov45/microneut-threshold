@@ -55,7 +55,8 @@ simple_test <- function(threshold, data) {
       test_char_val_high = if_else(
         first(inf) == 0L, get_high_bound(n[pos == 0L], sum(n)),
         get_high_bound(n[pos == 1L], sum(n))
-      )
+      ),
+      .groups = "drop"
     ) %>%
     select(-inf)
 }
@@ -79,6 +80,8 @@ datasets$combined <- bind_rows(
 )
 
 thresholds <- seq(20L, 50L, 5L)
+
+# Multiple thresholds on all datasets
 
 results <- map(datasets, ~ map_dfr(thresholds, simple_test, .x))
 
@@ -110,3 +113,53 @@ bind_rows(results, .id = "Dataset") %>%
   ) %>%
   collapse_rows(1, valign = "top", latex_hline = "major") %>%
   save_table("result-all")
+
+# Multiple thresholds on different symtom onset-based subsets of the Kanta
+# dataset
+
+duration_thresholds <- seq(0L, 12L, 2L)
+
+kanta_split <- map_dfr(duration_thresholds, function(duration_threshold) {
+  datasets$kanta %>%
+    filter(!is.na(titre), !is.na(inf)) %>%
+    # We only have symtom duration for the infected
+    filter(symptom_duration >= duration_threshold | inf == 0L) %>%
+    mutate(duration_threshold = duration_threshold)
+})
+
+results_dur <- kanta_split %>%
+  group_by(duration_threshold) %>%
+  group_modify(~ map_dfr(seq(20L, 35L, 5L), simple_test, .x)) %>%
+  ungroup()
+
+results_dur %>%
+  mutate_if(is.numeric, ~ signif(., 2)) %>%
+  mutate(
+    `Minimum duration` = duration_threshold,
+    test_char_est = glue::glue(
+      "{test_char_val} ({test_char_val_low}, {test_char_val_high})"
+    )
+  ) %>%
+  select(
+    `Minimum duration`, test_char,
+    Threshold = threshold, test_char_est
+  ) %>%
+  pivot_wider(names_from = "test_char", values_from = "test_char_est") %>%
+  kable(
+    format = "latex",
+    caption = "Estimates (95\\% CI) of sensitivity and specificity for the
+    new dataset with different symtom duration thresholds. Only sensitivity
+    is affected because symptom duration only applies to those infected in
+    the given data.  Minimum duration
+    of 3 means that subjects whose symptoms lasted for less than 3 days before
+    the antibody test were excluded.",
+    label = "result-dur",
+    escape = FALSE,
+    booktabs = TRUE,
+    align = "lccc"
+  ) %>%
+  kable_styling(
+    latex_options = "striped"
+  ) %>%
+  collapse_rows(1, valign = "top", latex_hline = "major") %>%
+  save_table("result-dur")

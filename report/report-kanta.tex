@@ -43,6 +43,12 @@ method as implemented in the PropCIs package \cite{PropCIs} in R \cite{R}.
 
 This way of doing it avoids having to assume how the titres are distributed.
 
+To investigate the impact of symptom duration, I took the new data and
+created subsets of it by excluding subjects based on symptom duration.
+The idea is that
+unless someone had symptoms for at least a certain number of days then
+the antibody test is not meaningful and their results should be excluded.
+
 \section{Results}
 
 The results for the previous dataset provided by Suellen
@@ -50,7 +56,23 @@ The results for the previous dataset provided by Suellen
 the combined dataset (Figure~\ref{fig:combined})
 are in Table~\ref{tab:result-all}.
 
+The results for different symptom duration thresholds are in
+Table~\ref{tab:result-dur}. Only sensitivity
+is affected because symptom duration only applies to those infected in
+the given data. Sensitivity generally increases at all thresholds with
+increasing minimum duration.
+
+Going from no accounting for symptom duration to excluding subjects whose
+symptoms lasted for less than 2 days before serum collection
+(i.e. setting minimum symptom duration to 2) appears to
+increase test sensitivity by 5-10\% across the titre thresholds.
+
+Setting minimum symptom duration to 12 leads to no false negatives in the data
+at any threshold from 20 to 35.
+
 \input{../simple-test/result-all.tex}
+
+\input{../simple-test/result-dur.tex}
 
 \begin{figure}[htp]
     \centering

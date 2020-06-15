@@ -63,13 +63,16 @@ save_csv(all_data, "suellen")
 kanta <- read_excel(
   file.path(data_raw_dir, "kanta.xlsx"),
   sheet = 1,
-  range = "A4:D221",
-  col_names = c("id", "diag", "inf", "titre")
+  range = "A4:E221",
+  col_names = c("id", "diag", "inf", "titre", "symptom_duration"),
+  na = c("", "?")
 ) %>%
   mutate(
     inf = as.integer(str_detect(diag, regex("SARS-CoV-2", ignore_case = TRUE))),
     titre = as.numeric(titre),
-    logtitre = log(titre)
+    logtitre = log(titre),
+    symptom_duration = str_replace(symptom_duration, "[^\\d]", "") %>%
+      as.numeric()
   ) %>%
   select(-diag)
 
