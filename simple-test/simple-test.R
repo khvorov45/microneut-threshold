@@ -115,7 +115,7 @@ bind_rows(results, .id = "Dataset") %>%
     label = "result-all",
     escape = FALSE,
     booktabs = TRUE,
-    align = "lccc"
+    align = "lccccc"
   ) %>%
   kable_styling(
     latex_options = "striped"
@@ -173,7 +173,7 @@ results_dur %>%
     label = "result-dur",
     escape = FALSE,
     booktabs = TRUE,
-    align = "lccc"
+    align = "c"
   ) %>%
   kable_styling(
     latex_options = "striped"
