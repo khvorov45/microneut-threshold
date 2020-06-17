@@ -44,6 +44,7 @@ simple_test <- function(threshold, data) {
     group_by(inf) %>%
     summarise(
       threshold = threshold,
+      nsam = sum(n),
       test_char = if_else(first(inf) == 0L, "Specificity", "Sensitivity"),
       test_char_val = if_else(
         first(inf) == 0L, n[pos == 0L] / sum(n), n[pos == 1L] / sum(n)
@@ -91,13 +92,21 @@ iwalk(results, save_csv)
 
 bind_rows(results, .id = "Dataset") %>%
   mutate_if(is.numeric, ~ signif(., 2)) %>%
+  group_by(Dataset) %>%
   mutate(
     Dataset = tools::toTitleCase(Dataset),
+    Infected = unique(nsam[test_char == "Sensitivity"]),
+    Uninfected = unique(nsam[test_char == "Specificity"]),
     test_char_est = glue::glue(
       "{test_char_val} ({test_char_val_low}, {test_char_val_high})"
     )
   ) %>%
-  select(Dataset, test_char, Threshold = threshold, test_char_est) %>%
+  ungroup() %>%
+  select(
+    Dataset, test_char, Uninfected, Infected,
+    Threshold = threshold,
+    test_char_est
+  ) %>%
   pivot_wider(names_from = "test_char", values_from = "test_char_est") %>%
   kable(
     format = "latex",
@@ -111,7 +120,7 @@ bind_rows(results, .id = "Dataset") %>%
   kable_styling(
     latex_options = "striped"
   ) %>%
-  collapse_rows(1, valign = "top", latex_hline = "major") %>%
+  collapse_rows(c(1, 2, 3), valign = "top", latex_hline = "major") %>%
   save_table("result-all")
 
 # Multiple thresholds on different symtom onset-based subsets of the Kanta
@@ -134,14 +143,22 @@ results_dur <- kanta_split %>%
 
 results_dur %>%
   mutate_if(is.numeric, ~ signif(., 2)) %>%
+  group_by(duration_threshold) %>%
   mutate(
-    `Minimum duration` = duration_threshold,
+    Infected = unique(nsam[test_char == "Sensitivity"]),
+    Uninfected = paste0(
+      unique(nsam[test_char == "Specificity"]),
+      "EXTRA",
+      rnorm(1),
+      "EXTRAEND"
+    ),
     test_char_est = glue::glue(
       "{test_char_val} ({test_char_val_low}, {test_char_val_high})"
     )
   ) %>%
+  ungroup() %>%
   select(
-    `Minimum duration`, test_char,
+    `Minimum duration` = duration_threshold, Uninfected, Infected, test_char,
     Threshold = threshold, test_char_est
   ) %>%
   pivot_wider(names_from = "test_char", values_from = "test_char_est") %>%
@@ -161,5 +178,9 @@ results_dur %>%
   kable_styling(
     latex_options = "striped"
   ) %>%
-  collapse_rows(1, valign = "top", latex_hline = "major") %>%
+  collapse_rows(
+    c(1, 2, 3),
+    valign = "top", latex_hline = "major"
+  ) %>%
+  str_replace_all("EXTRA.*EXTRAEND", "") %>%
   save_table("result-dur")
